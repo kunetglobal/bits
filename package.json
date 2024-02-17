@@ -1,15 +1,15 @@
 {
   "name": "bits",
-  "version": "1.0.0",
+  "author": "kualta <contact@kualta.dev>",
   "description": "kunet agents",
+  "version": "1.0.0",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
     "build": "tsup src/index.ts --minify"
   },
-  "author": "kualta <contact@kualta.dev>",
-  "license": "MIT",
   "dependencies": {
     "discord.js": "^14.14.1",
     "dotenv": "^16.3.1"
