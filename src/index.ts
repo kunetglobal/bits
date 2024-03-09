@@ -1,7 +1,7 @@
 import { Client } from "discord.js";
 import { config } from "./config";
 import { exec } from "child_process";
-import { sendMessageToChannel } from "./sendMessageToChannel";
+import { sendMessageToChannel } from "./misc/sendMessageToChannel";
 
 export const client = new Client({
 	intents: ["Guilds", "GuildMessages", "DirectMessages", "MessageContent"],
