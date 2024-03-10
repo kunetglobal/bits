@@ -1,0 +1,13 @@
+[Unit]
+Description=kumiko
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+ExecStart=/usr/bin/node /home/%u/bits/dist/index.js
+WorkingDirectory=/home/%u/bits/
+
+[Install]
+WantedBy=multi-user.target
