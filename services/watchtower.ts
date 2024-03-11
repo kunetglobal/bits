@@ -14,7 +14,7 @@ const secret = process.env.GITHUB_WEBHOOK_SECRET;
 if (!secret) throw new Error("GITHUB_WEBHOOK_SECRET is not defined");
 if (!port) throw new Error("WATCHTOWER_PORT is not defined");
 
-async function runWatchtowerActions(req, res) {
+async function runWatchtowerActions(res: express.Response) {
 	try {
 		// Pull latest code from GitHub
 		const gitPull = await execPromise("cd ~/bits && git pull");
@@ -29,7 +29,7 @@ async function runWatchtowerActions(req, res) {
 		// Send response if everything succeeded
 		res.status(200).send("Webhook received successfully");
 	} catch (error) {
-		console.error(`Error: ${error.message}`);
+		console.error(error);
 		res.status(500).send("Internal server error");
 	}
 }
@@ -60,7 +60,7 @@ app.post("/hook", (req, res) => {
 	// Log the update
 	console.log("New commit pushed:", body.head_commit.id);
 
-	runWatchtowerActions(req, res);
+	runWatchtowerActions(res);
 });
 
 function verifySignature(req: express.Request, res: express.Response) {
