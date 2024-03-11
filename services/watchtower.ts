@@ -22,7 +22,7 @@ async function runWatchtowerActions(res: express.Response) {
 		console.error(`stderr: ${gitPull.stderr}`);
 
 		// Execute the watchtower action script
-		const actionScript = await execPromise("./action.sh");
+		const actionScript = await execPromise("~/bits/services/action.sh");
 		console.log(`stdout: ${actionScript.stdout}`);
 		console.error(`stderr: ${actionScript.stderr}`);
 
