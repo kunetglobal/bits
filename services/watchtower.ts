@@ -18,15 +18,14 @@ async function runWatchtowerActions(res: express.Response) {
 	try {
 		// Pull latest code from GitHub
 		const gitPull = await execPromise("cd ~/bits && git pull");
-		console.log(`stdout: ${gitPull.stdout}`);
-		console.error(`stderr: ${gitPull.stderr}`);
+		console.log(gitPull.stdout);
+		console.error(gitPull.stderr);
 
 		// Execute the watchtower action script
 		const actionScript = await execPromise("~/bits/services/action.sh");
-		console.log(`stdout: ${actionScript.stdout}`);
-		console.error(`stderr: ${actionScript.stderr}`);
+		console.log(actionScript.stdout);
+		console.error(actionScript.stderr);
 
-		// Send response if everything succeeded
 		res.status(200).send("Webhook received successfully");
 	} catch (error) {
 		console.error(error);
