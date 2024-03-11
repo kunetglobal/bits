@@ -46,10 +46,6 @@ app.post("/hook", (req, res) => {
 		console.error(`stderr: ${stderr}`);
 	});
 
-	// Run the watchtower action script
-	// This script will check for any changes to the configuration files and update the watchtower service accordingly
-	// It will also restart the watchtower service if necessary
-
 	// Execute the watchtower action script
 	execFile("./action.sh", (error, stdout, stderr) => {
 		if (error) {
