@@ -37,6 +37,19 @@ app.post("/hook", (req, res) => {
 	// Log the update
 	console.log("New commit pushed:", body.head_commit.id);
 
+	// Pull latest code from GitHub
+	exec("cd ~/bits && git pull", (error, stdout, stderr) => {
+		if (error) {
+			console.error(`Error pulling from GitHub: ${error.message}`);
+		}
+		console.log(`stdout: ${stdout}`);
+		console.error(`stderr: ${stderr}`);
+	});
+
+	// Run the watchtower action script
+	// This script will check for any changes to the configuration files and update the watchtower service accordingly
+	// It will also restart the watchtower service if necessary
+
 	// Execute the watchtower action script
 	execFile("./action.sh", (error, stdout, stderr) => {
 		if (error) {
