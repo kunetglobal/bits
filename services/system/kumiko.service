@@ -6,8 +6,8 @@ After=network.target
 Type=simple
 Restart=always
 RestartSec=5
-ExecStart=/usr/bin/node /home/%u/bits/dist/index.js
-WorkingDirectory=/home/%u/bits/
+ExecStart=/usr/local/bin/ts-node %h/bits/src/index.ts
+WorkingDirectory=%h/bits/
 
 [Install]
 WantedBy=multi-user.target

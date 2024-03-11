@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import { exec, execFile } from "child_process";
 
 dotenv.config();
 
@@ -31,13 +32,20 @@ app.post("/hook", (req, res) => {
 		return res.status(200).send("Webhook received successfully");
 	}
 
-	// Verify signature
 	verifySignature(req, res);
 
-	// Trigger action
+	// Log the update
 	console.log("New commit pushed:", body.head_commit.id);
 
-	res.status(200).send("Webhook received successfully");
+	// Execute the watchtower action script
+	execFile("./action.sh", (error, stdout, stderr) => {
+		if (error) {
+			console.error(`Error executing watchtower script: ${error.message}`);
+		}
+		console.log(`stdout: ${stdout}`);
+		console.error(`stderr: ${stderr}`);
+		res.status(200).send("Webhook received successfully");
+	});
 });
 
 function verifySignature(req: express.Request, res: express.Response) {
