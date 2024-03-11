@@ -10,18 +10,16 @@ nvm install 21
 nvm use 21
 ```
 
-
-
-
-1. Install `ts-node` 
+1. Clone & Install
 ```sh
-npm install -g typescript
-npm install -g ts-node
+git clone https://github.com/kunetglobal/bits
+cd bits
+npm install
 ```
 
 1. Setup webhooks with github, then start watchtower:
 ```sh 
-ts-node services/watchtower.ts
+npx ts-node services/watchtower.ts
 ```
 
 <!-- 3. todo -->

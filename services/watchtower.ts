@@ -1,15 +1,38 @@
 import express from "express";
 import dotenv from "dotenv";
-import { exec, execFile } from "child_process";
+import { exec } from "child_process";
+
+import { promisify } from "util";
 
 dotenv.config();
 
 const app = express();
+const execPromise = promisify(exec);
 const port = process.env.WATCHTOWER_PORT;
 const secret = process.env.GITHUB_WEBHOOK_SECRET;
 
 if (!secret) throw new Error("GITHUB_WEBHOOK_SECRET is not defined");
 if (!port) throw new Error("WATCHTOWER_PORT is not defined");
+
+async function runWatchtowerActions(req, res) {
+	try {
+		// Pull latest code from GitHub
+		const gitPull = await execPromise("cd ~/bits && git pull");
+		console.log(`stdout: ${gitPull.stdout}`);
+		console.error(`stderr: ${gitPull.stderr}`);
+
+		// Execute the watchtower action script
+		const actionScript = await execPromise("./action.sh");
+		console.log(`stdout: ${actionScript.stdout}`);
+		console.error(`stderr: ${actionScript.stderr}`);
+
+		// Send response if everything succeeded
+		res.status(200).send("Webhook received successfully");
+	} catch (error) {
+		console.error(`Error: ${error.message}`);
+		res.status(500).send("Internal server error");
+	}
+}
 
 app.use(express.json());
 
@@ -37,24 +60,7 @@ app.post("/hook", (req, res) => {
 	// Log the update
 	console.log("New commit pushed:", body.head_commit.id);
 
-	// Pull latest code from GitHub
-	exec("cd ~/bits && git pull", (error, stdout, stderr) => {
-		if (error) {
-			console.error(`Error pulling from GitHub: ${error.message}`);
-		}
-		console.log(`stdout: ${stdout}`);
-		console.error(`stderr: ${stderr}`);
-	});
-
-	// Execute the watchtower action script
-	execFile("./action.sh", (error, stdout, stderr) => {
-		if (error) {
-			console.error(`Error executing watchtower script: ${error.message}`);
-		}
-		console.log(`stdout: ${stdout}`);
-		console.error(`stderr: ${stderr}`);
-		res.status(200).send("Webhook received successfully");
-	});
+	runWatchtowerActions(req, res);
 });
 
 function verifySignature(req: express.Request, res: express.Response) {
