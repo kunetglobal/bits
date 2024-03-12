@@ -3,7 +3,6 @@ Description=Watchtower Service
 After=network.target
 
 [Service]
-User=bits
 WorkingDirectory=/home/bits/bits
 ExecStart=/usr/local/bin/ts-node /home/bits/bits/services/watchtower.ts
 
