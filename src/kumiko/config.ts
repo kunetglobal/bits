@@ -5,7 +5,7 @@ dotenv.config();
 const { KUMIKO_TOKEN, KUMIKO_CLIENT_ID } = process.env;
 
 if (!KUMIKO_TOKEN || !KUMIKO_CLIENT_ID) {
-  throw new Error("Missing environment variables");
+  throw new Error("Environment variables KUMIKO_TOKEN and KUMIKO_CLIENT_ID must be set.");
 }
 
 export const config = {
