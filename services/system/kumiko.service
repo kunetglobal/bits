@@ -6,8 +6,9 @@ After=network.target
 Type=simple
 Restart=always
 RestartSec=5
-ExecStart=/usr/local/bin/ts-node /home/bits/bits/src/index.ts
 WorkingDirectory=/home/bits/bits/
+Environment=PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+ExecStart=/bin/bash -c 'source /home/bits/.nvm/nvm.sh && node_path=$(nvm which node) && /usr/local/bin/ts-node /home/bits/bits/src/index.ts'
 
 [Install]
 WantedBy=multi-user.target
