@@ -6,8 +6,8 @@ After=network.target
 Type=simple
 Restart=always
 RestartSec=5
-ExecStart=/usr/local/bin/ts-node %h/bits/src/index.ts
-WorkingDirectory=%h/bits/
+ExecStart=/usr/local/bin/ts-node /home/bits/bits/src/index.ts
+WorkingDirectory=/home/bits/bits/
 
 [Install]
 WantedBy=multi-user.target
