@@ -9,6 +9,8 @@ echo "Watchtower: Service daemon reloaded"
 echo "Watchtower: Restarting services: "
 while IFS= read -r service; do
     sudo systemctl restart "$service.service"
+    sudo systemctl enable "$service.service"
     echo " - restarted $service"
 done < <(jq -r '.services[]' ~/bits/services/services.json)
 echo "Watchtower: Restarted all services"
+

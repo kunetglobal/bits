@@ -1,0 +1,14 @@
+[Unit]
+Description=Watchtower Service
+After=network.target
+
+[Service]
+User=bits
+WorkingDirectory=%h/bits
+ExecStart=/usr/local/bin/ts-node %h/bits/services/watchtower.ts
+
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

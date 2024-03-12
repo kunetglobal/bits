@@ -5,7 +5,6 @@ import { exec } from "child_process";
 import { promisify } from "util";
 
 dotenv.config();
-
 const app = express();
 const execPromise = promisify(exec);
 const port = process.env.WATCHTOWER_PORT;
@@ -13,25 +12,6 @@ const secret = process.env.GITHUB_WEBHOOK_SECRET;
 
 if (!secret) throw new Error("GITHUB_WEBHOOK_SECRET is not defined");
 if (!port) throw new Error("WATCHTOWER_PORT is not defined");
-
-async function runWatchtowerActions(res: express.Response) {
-	try {
-		// Pull latest code from GitHub
-		const gitPull = await execPromise("cd ~/bits && git pull");
-		console.log(gitPull.stdout);
-		console.error(gitPull.stderr);
-
-		// Execute the watchtower action script
-		const actionScript = await execPromise("~/bits/services/action.sh");
-		console.log(actionScript.stdout);
-		console.error(actionScript.stderr);
-
-		res.status(200).send("Webhook received successfully");
-	} catch (error) {
-		console.error(error);
-		res.status(500).send("Internal server error");
-	}
-}
 
 app.use(express.json());
 
@@ -86,6 +66,25 @@ function verifySignature(req: express.Request, res: express.Response) {
 		res.status(400).send("GitHub signature verification failed");
 	} else {
 		console.log("GitHub signature verified");
+	}
+}
+
+async function runWatchtowerActions(res: express.Response) {
+	try {
+		// Pull latest code from GitHub
+		const gitPull = await execPromise("cd ~/bits && git pull");
+		if (gitPull.stderr) console.error(gitPull.stderr);
+		if (gitPull.stdout) console.log(gitPull.stdout);
+
+		// Execute the watchtower action script
+		const actionScript = await execPromise("~/bits/services/action.sh");
+		if (actionScript.stdout) console.log(actionScript.stdout);
+		if (actionScript.stderr) console.error(actionScript.stderr);
+
+		res.status(200).send("Webhook received successfully");
+	} catch (error) {
+		console.error(error);
+		res.status(500).send("Internal server error");
 	}
 }
 
