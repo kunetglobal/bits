@@ -1,6 +1,7 @@
 {
   "services": [
     "listmonk",
-    "minecraft"
+    "minecraft",
+    "watchtower"
   ]
 }
