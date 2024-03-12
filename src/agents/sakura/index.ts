@@ -1,7 +1,7 @@
 import { Client } from "discord.js";
 import { config } from "./config";
 import { exec } from "child_process";
-import { sendMessageToChannel } from "../misc/sendMessageToChannel";
+import { sendMessageToChannel } from "../../misc/sendMessageToChannel";
 
 export const client = new Client({
 	intents: ["Guilds", "GuildMessages", "DirectMessages", "MessageContent"],
@@ -11,7 +11,7 @@ client.once("ready", () => {
 	console.log("kumiko is ready!");
 });
 
-client.login(config.KUMIKO_TOKEN);
+client.login(config.SAKURA_TOKEN);
 
 function isSystemdServiceActive(serviceName: string): Promise<boolean> {
 	return new Promise((resolve, reject) => {
