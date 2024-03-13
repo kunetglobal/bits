@@ -1,6 +1,6 @@
-import { Client, Message, TextChannel } from "discord.js";
+import { Client, TextChannel } from "discord.js";
 
-export class CustomClient extends Client {
+export class Agent extends Client {
 	async sendMessage(channelId: string, message: string) {
 		const channel = await this.channels.fetch(channelId);
 		if (channel?.isTextBased()) {

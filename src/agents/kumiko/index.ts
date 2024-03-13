@@ -1,16 +1,16 @@
-import { CustomClient } from "../../framework/client";
+import { Agent } from "../../framework/client";
 import { config } from "./config";
 import { exec } from "child_process";
 
-export const client = new CustomClient({
+export const agent = new Agent({
 	intents: ["Guilds", "GuildMessages", "DirectMessages", "MessageContent"],
 });
 
-client.once("ready", () => {
+agent.once("ready", () => {
 	console.log("kumiko is ready!");
 });
 
-client.login(config.KUMIKO_TOKEN);
+agent.login(config.KUMIKO_TOKEN);
 
 function isSystemdServiceActive(serviceName: string): Promise<boolean> {
 	return new Promise((resolve, reject) => {
@@ -24,7 +24,7 @@ function isSystemdServiceActive(serviceName: string): Promise<boolean> {
 	});
 }
 
-client.on("messageCreate", async (message) => {
+agent.on("messageCreate", async (message) => {
 	console.log(message.content);
 	const messageContent = message.content.toLowerCase();
 
@@ -34,7 +34,7 @@ client.on("messageCreate", async (message) => {
 	}
 
 	if (messageContent.includes("status")) {
-		await client.sendMessage(
+		await agent.sendMessage(
 			message.channelId,
 			"**`( =ω=)b`: all systems operational**",
 		);
@@ -49,7 +49,7 @@ setInterval(async () => {
 			console.log(`${serviceName} is active.`);
 		} else {
 			console.log(`${serviceName} is not active.`);
-			await client.sendMessage(
+			await agent.sendMessage(
 				"your-channel-id",
 				`${serviceName} is not active.`,
 			);
