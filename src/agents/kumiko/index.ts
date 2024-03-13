@@ -1,9 +1,8 @@
-import { Client } from "discord.js";
+import { CustomClient } from "../../framework/client";
 import { config } from "./config";
 import { exec } from "child_process";
-import { sendMessageToChannel } from "../../misc/sendMessageToChannel";
 
-export const client = new Client({
+export const client = new CustomClient({
 	intents: ["Guilds", "GuildMessages", "DirectMessages", "MessageContent"],
 });
 
@@ -35,7 +34,7 @@ client.on("messageCreate", async (message) => {
 	}
 
 	if (messageContent.includes("status")) {
-		await sendMessageToChannel(
+		await client.sendMessage(
 			message.channelId,
 			"**`( =ω=)b`: all systems operational**",
 		);
@@ -50,7 +49,7 @@ setInterval(async () => {
 			console.log(`${serviceName} is active.`);
 		} else {
 			console.log(`${serviceName} is not active.`);
-			await sendMessageToChannel(
+			await client.sendMessage(
 				"your-channel-id",
 				`${serviceName} is not active.`,
 			);

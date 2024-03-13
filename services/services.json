@@ -1,10 +1,10 @@
 {
   "services": [
+    "kudasai",
     "kumiko",
+    "sakura",
     "listmonk",
     "minecraft",
-    "watchtower",
-    "kudasai",
-    "sakura"
+    "watchtower"
   ]
 }
