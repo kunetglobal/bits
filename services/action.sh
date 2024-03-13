@@ -8,13 +8,15 @@ echo "Watchtower: Service daemon reloaded"
 
 echo "Watchtower: Restarting services: "
 
-# Iterate over all service files in the system directory
-for service_file in "$(dirname "$0")/script_dir/system/"*.service; do
-    sudo systemctl restart "$service_file"
-    sudo systemctl enable "$service_file"
-    sudo systemctl start "$service_file"
+script_dir=$(dirname "$0")
+for service_file in "$script_dir/system/"*.service; do
+    file=$(basename "$service_file" .service)
 
-    echo " - restarted $service_file"
+    sudo systemctl restart "$file.service"
+    sudo systemctl enable "$file.service"
+    sudo systemctl start "$file.service"
+
+    echo " - restarted $file"
 done
 echo "Watchtower: Restarted all services"
 
