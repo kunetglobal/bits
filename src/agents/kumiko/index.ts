@@ -1,6 +1,6 @@
+import { exec } from "child_process";
 import { Agent } from "../../framework/client";
 import { config } from "./config";
-import { exec } from "child_process";
 
 export const agent = new Agent({
 	intents: ["Guilds", "GuildMessages", "DirectMessages", "MessageContent"],

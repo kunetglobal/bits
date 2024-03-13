@@ -6,7 +6,7 @@ export const agent = new Agent({
 });
 
 agent.once("ready", () => {
-	console.log("kumiko is ready!");
+	console.log("sakura is ready!");
 });
 
 agent.login(config.SAKURA_TOKEN);

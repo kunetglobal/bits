@@ -8,7 +8,10 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "ts-node src/index.ts",
-    "build": "tsup src/index.ts --minify"
+    "build": "tsup src/index.ts --minify",
+    "format": "npx @biomejs/biome format --write ./src/*",
+    "lint": "npx @biomejs/biome lint --apply-unsafe ./src/*",
+    "check": "npx @biomejs/biome check --apply-unsafe ./src/*"
   },
   "dependencies": {
     "discord.js": "^14.12.1",
