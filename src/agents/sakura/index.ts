@@ -1,24 +1,24 @@
 import { Agent } from "../../framework/client";
-import { config } from "./config";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const { SAKURA_TOKEN, SAKURA_CLIENT_ID } = process.env;
+if (!SAKURA_TOKEN || !SAKURA_CLIENT_ID) {
+	throw new Error(
+		"Environment variables SAKURA_TOKEN and SAKURA_CLIENT_ID must be set.",
+	);
+}
 
 export const agent = new Agent({
-	intents: ["Guilds", "GuildMessages", "DirectMessages", "MessageContent"],
+	token: SAKURA_TOKEN,
+	client_id: SAKURA_CLIENT_ID,
+	intents: ["Guilds", "GuildMessages"],
 });
-
-agent.once("ready", () => {
-	console.log("sakura is ready!");
-});
-
-agent.login(config.SAKURA_TOKEN);
 
 agent.on("messageCreate", async (message) => {
 	console.log(message.content);
 	const messageContent = message.content.toLowerCase();
-
-	// check if user has system-level access
-	if (message.member?.roles.cache.some((role) => role.name === "S")) {
-		console.log(message.member.roles.cache);
-	}
 
 	if (messageContent.includes("status")) {
 		await agent.sendMessage(

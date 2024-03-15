@@ -1,24 +1,25 @@
 import { Agent } from "../../framework/client";
-import { config } from "./config";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const { KUDASAI_TOKEN, KUDASAI_CLIENT_ID } = process.env;
+if (!KUDASAI_TOKEN || !KUDASAI_CLIENT_ID) {
+	throw new Error(
+		"Environment variables KUDASAI_TOKEN and KUDASAI_CLIENT_ID must be set.",
+	);
+}
 
 export const agent = new Agent({
-	intents: ["Guilds", "GuildMessages", "DirectMessages", "MessageContent"],
+	token: KUDASAI_TOKEN,
+	client_id: KUDASAI_CLIENT_ID,
+	intents: ["Guilds", "GuildMessages"],
 });
-
-agent.once("ready", () => {
-	console.log("kudasai is ready!");
-});
-
-agent.login(config.KUDASAI_TOKEN);
 
 agent.on("messageCreate", async (message) => {
 	console.log(message.content);
 	const messageContent = message.content.toLowerCase();
 
-	// check if user has system-level access
-	if (message.member?.roles.cache.some((role) => role.name === "S")) {
-		console.log(message.member.roles.cache);
-	}
 
 	if (messageContent.includes("status")) {
 		await agent.sendMessage(

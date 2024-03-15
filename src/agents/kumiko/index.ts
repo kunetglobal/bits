@@ -1,37 +1,25 @@
-import { exec } from "child_process";
+import { exec } from "node:child_process";
 import { Agent } from "../../framework/client";
-import { config } from "./config";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const { KUMIKO_TOKEN, KUMIKO_CLIENT_ID } = process.env;
+if (!KUMIKO_TOKEN || !KUMIKO_CLIENT_ID) {
+	throw new Error(
+		"Environment variables KUMIKO_TOKEN and KUMIKO_CLIENT_ID must be set.",
+	);
+}
 
 export const agent = new Agent({
-	intents: ["Guilds", "GuildMessages", "DirectMessages", "MessageContent"],
+	token: KUMIKO_TOKEN,
+	client_id: KUMIKO_CLIENT_ID,
+	intents: ["Guilds", "GuildMessages"],
 });
-
-agent.once("ready", () => {
-	console.log("kumiko is ready!");
-});
-
-agent.login(config.KUMIKO_TOKEN);
-
-function isSystemdServiceActive(serviceName: string): Promise<boolean> {
-	return new Promise((resolve, reject) => {
-		exec(`systemctl is-active ${serviceName}`, (error, stdout, stderr) => {
-			if (error) {
-				reject(error);
-			} else {
-				resolve(stdout.trim() === "active");
-			}
-		});
-	});
-}
 
 agent.on("messageCreate", async (message) => {
 	console.log(message.content);
 	const messageContent = message.content.toLowerCase();
-
-	// check if user has system-level access
-	if (message.member?.roles.cache.some((role) => role.name === "S")) {
-		console.log(message.member.roles.cache);
-	}
 
 	if (messageContent.includes("status")) {
 		await agent.sendMessage(
@@ -40,6 +28,18 @@ agent.on("messageCreate", async (message) => {
 		);
 	}
 });
+
+function isSystemdServiceActive(serviceName: string): Promise<boolean> {
+	return new Promise((resolve, reject) => {
+		exec(`sudo systemctl is-active ${serviceName}`, (error, stdout) => {
+			if (error) {
+				reject(error);
+			} else {
+				resolve(stdout.trim() === "active");
+			}
+		});
+	});
+}
 
 setInterval(async () => {
 	const serviceName = "mailchimp";
