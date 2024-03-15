@@ -1,7 +1,7 @@
-import express, { Request, Response } from "express";
+import express, { type Request, type Response } from "express";
 import dotenv from "dotenv";
-import { exec, ExecException } from "child_process";
-import { promisify } from "util";
+import { exec, ExecException } from "node:child_process";
+import { promisify } from "node:util";
 
 dotenv.config();
 const app = express();
@@ -36,7 +36,9 @@ function checkEventType(req: Request, res: Response): void {
 }
 
 function verifySignature(req: Request, res: Response): void {
-	const githubSignature: string | undefined = req.headers["x-hub-signature"] as string | undefined;
+	const githubSignature: string | undefined = req.headers["x-hub-signature"] as
+		| string
+		| undefined;
 	if (!githubSignature) {
 		console.error("GitHub signature is not defined", req.headers);
 		res.status(400).send("Invalid request: GitHub signature is not defined");
@@ -44,10 +46,12 @@ function verifySignature(req: Request, res: Response): void {
 	}
 
 	// Verify signature
-	const crypto = require("crypto");
+	const crypto = require("node:crypto");
 	const hmac = crypto.createHmac("sha1", secret);
 	const payload: string = JSON.stringify(req.body);
-	const expectedSignature: string = `sha1=${hmac.update(payload).digest("hex")}`;
+	const expectedSignature: string = `sha1=${hmac
+		.update(payload)
+		.digest("hex")}`;
 	if (
 		!crypto.timingSafeEqual(
 			Buffer.from(githubSignature),

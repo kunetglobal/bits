@@ -1,5 +1,11 @@
 ## Kunet Agents
 
+### Overview
+
+- Kumiko - watches over kunet service health
+- Kudasai - staff & role manager
+- Sakura - keeps kunet up to date
+
 ### Installation
 
 0. Install `nvm` & `npm`
@@ -12,14 +18,15 @@ nvm use 21
 
 1. Clone & Install
 ```sh
-git clone https://github.com/kunetglobal/bits
-cd bits
-npm install
+git clone https://github.com/kunetglobal/bits && cd bits && npm install
 ```
 
-1. Setup webhooks with github, then start watchtower:
+2. Bootstrap services with
 ```sh 
-npx ts-node services/watchtower.ts
+./services/action.sh
 ```
-
-<!-- 3. todo -->
+or start the watchtower manually:
+```sh
+npx ts-node ./services/watchtower.ts
+```
+and it'll setup the services automagically on next push
