@@ -48,12 +48,6 @@ export async function runWatchtowerActions(req: Request): Promise<void> {
 	console.log("New commit pushed:", req.body.head_commit?.id);
 
 	try {
-		// Pull latest code from GitHub
-		const gitPull = await execPromise("cd /home/bits/bits && git pull");
-		if (gitPull.stderr) console.error(gitPull.stderr);
-		if (gitPull.stdout) console.log(gitPull.stdout);
-
-		// Execute the watchtower action script
 		const actionScript = await execPromise("/home/bits/bits/services/action.sh");
 		if (actionScript.stdout) console.log(actionScript.stdout);
 		if (actionScript.stderr) console.error(actionScript.stderr);

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+cd ~/bits/
+git pull
+echo "Watchtower: Pulled latest changes"
+
 sudo cp -f ~/bits/services/system/* /etc/systemd/system/
 echo "Watchtower: Service files updated"
 
