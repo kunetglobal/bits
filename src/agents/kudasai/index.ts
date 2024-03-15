@@ -11,6 +11,7 @@ if (!KUDASAI_TOKEN || !KUDASAI_CLIENT_ID) {
 }
 
 export const agent = new Agent({
+	name: "kudasai",
 	token: KUDASAI_TOKEN,
 	client_id: KUDASAI_CLIENT_ID,
 	intents: ["Guilds", "GuildMessages"],

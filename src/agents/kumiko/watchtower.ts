@@ -1,31 +1,10 @@
-import express, { type Request, type Response } from "express";
-import dotenv from "dotenv";
-import { exec, ExecException } from "node:child_process";
+import type { Request, Response } from "express";
+import { exec} from "node:child_process";
 import { promisify } from "node:util";
 
-dotenv.config();
-const app = express();
 const execPromise = promisify(exec);
-const port: string | undefined = process.env.WATCHTOWER_PORT;
-const secret: string | undefined = process.env.GITHUB_WEBHOOK_SECRET;
 
-if (!secret) throw new Error("GITHUB_WEBHOOK_SECRET is not defined");
-if (!port) throw new Error("WATCHTOWER_PORT is not defined");
-
-app.use(express.json());
-
-app.post("/hook", (req: Request, res: Response) => {
-	// Only listen to push events
-	checkEventType(req, res);
-
-	// Make sure we're communicating with github
-	verifySignature(req, res);
-
-	// Pull new code and run the watchtower script
-	runWatchtowerActions(req);
-});
-
-function checkEventType(req: Request, res: Response): void {
+export function checkEventType(req: Request, res: Response): void {
 	const githubEvent: string = req.headers["x-github-event"] as string;
 	const isGithubPushEvent: boolean = githubEvent === "push";
 
@@ -35,7 +14,7 @@ function checkEventType(req: Request, res: Response): void {
 	}
 }
 
-function verifySignature(req: Request, res: Response): void {
+export function verifySignature(req: Request, res: Response, secret: string): void {
 	const githubSignature: string | undefined = req.headers["x-hub-signature"] as
 		| string
 		| undefined;
@@ -45,7 +24,6 @@ function verifySignature(req: Request, res: Response): void {
 		return;
 	}
 
-	// Verify signature
 	const crypto = require("node:crypto");
 	const hmac = crypto.createHmac("sha1", secret);
 	const payload: string = JSON.stringify(req.body);
@@ -66,7 +44,7 @@ function verifySignature(req: Request, res: Response): void {
 	}
 }
 
-async function runWatchtowerActions(req: Request): Promise<void> {
+export async function runWatchtowerActions(req: Request): Promise<void> {
 	console.log("New commit pushed:", req.body.head_commit?.id);
 
 	try {
@@ -83,7 +61,3 @@ async function runWatchtowerActions(req: Request): Promise<void> {
 		console.error(error);
 	}
 }
-
-app.listen(port, () => {
-	console.log(`Server is running on port ${port}`);
-});

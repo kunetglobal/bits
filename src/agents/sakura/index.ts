@@ -11,6 +11,7 @@ if (!SAKURA_TOKEN || !SAKURA_CLIENT_ID) {
 }
 
 export const agent = new Agent({
+	name: "sakura",
 	token: SAKURA_TOKEN,
 	client_id: SAKURA_CLIENT_ID,
 	intents: ["Guilds", "GuildMessages"],

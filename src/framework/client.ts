@@ -6,22 +6,24 @@ import {
 } from "discord.js";
 
 export interface AgentConfig {
+	name: string;
 	token: string;
 	client_id: string;
 	intents: BitFieldResolvable<GatewayIntentsString, number>;
+	init?(): void;
 }
 
 export class Agent extends Client {
 	constructor(config: AgentConfig) {
 		super({ intents: config.intents });
 
-		this.login(config.token);
+		if (config.init) config.init();
 
+		this.login(config.token);
 		this.once("ready", () => {
 			console.log("kumiko is ready!");
 		});
 	}
-	
 
 	async sendMessage(channelId: string, message: string): Promise<void> {
 		const channel = await this.channels.fetch(channelId);
