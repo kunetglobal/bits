@@ -3,6 +3,8 @@ Description=Kumiko Agent
 After=network.target
 
 [Service]
+User=bits
+Group=bits
 Type=simple
 Restart=always
 RestartSec=5
