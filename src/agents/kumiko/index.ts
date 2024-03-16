@@ -40,14 +40,18 @@ const config: KumikoConfig = {
 };
 
 config.init = () => {
-	const watchtower = spawn("ts-node", ["./watchtower.ts", config.port, config.githubWebhookSecret], {
-		stdio: "pipe",
+	const watchtower = spawn(
+		"ts-node",
+		["./watchtower.ts", config.port, config.githubWebhookSecret],
+		{
+			stdio: "pipe",
+		},
+	);
+	watchtower.stdout.on("data", (data: Buffer) => {
+		console.log(data.toString());
 	});
-	watchtower.stdout.on("data", (data) => {
-		console.log(data);
-	});
-	watchtower.stderr.on("data", (err) => {
-		console.error(err);
+	watchtower.stderr.on("data", (err: Buffer) => {
+		console.error(err.toString());
 	});
 };
 
