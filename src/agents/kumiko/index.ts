@@ -1,12 +1,6 @@
 import { exec, spawn } from "node:child_process";
 import { Agent, type AgentConfig } from "../../framework/client";
 import dotenv from "dotenv";
-import express, { type Request, type Response } from "express";
-import {
-	checkEventType,
-	runWatchtowerActions,
-	verifySignature,
-} from "./watchtower";
 
 dotenv.config();
 const {
@@ -42,7 +36,7 @@ const config: KumikoConfig = {
 config.init = () => {
 	const watchtower = spawn(
 		"ts-node",
-		["~/bits/watchtower.ts", config.port, config.githubWebhookSecret],
+		["./src/agents/kumiko/watchtower.ts", config.port, config.githubWebhookSecret],
 		{
 			stdio: "pipe",
 		},

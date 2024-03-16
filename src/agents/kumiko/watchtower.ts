@@ -78,7 +78,7 @@ export async function runWatchtowerActions(req: Request): Promise<void> {
 	console.log("Watchtower: New commit pushed: ", req.body.head_commit?.id);
 
 	try {
-		exec("/home/bits/bits/services/action.sh", (error, stdout, stderr) => {
+		exec("./services/action.sh", (error, stdout, stderr) => {
 			if (error) console.error(stderr);
 			if (stdout) console.log(stdout);
 		});
