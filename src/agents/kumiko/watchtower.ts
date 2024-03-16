@@ -1,8 +1,5 @@
 import type { Request, Response } from "express";
-import { exec} from "node:child_process";
-import { promisify } from "node:util";
-
-const execPromise = promisify(exec);
+import { exec } from "node:child_process";
 
 export function checkEventType(req: Request, res: Response): void {
 	const githubEvent: string = req.headers["x-github-event"] as string;
@@ -14,7 +11,11 @@ export function checkEventType(req: Request, res: Response): void {
 	}
 }
 
-export function verifySignature(req: Request, res: Response, secret: string): void {
+export function verifySignature(
+	req: Request,
+	res: Response,
+	secret: string,
+): void {
 	const githubSignature: string | undefined = req.headers["x-hub-signature"] as
 		| string
 		| undefined;
@@ -45,13 +46,14 @@ export function verifySignature(req: Request, res: Response, secret: string): vo
 }
 
 export async function runWatchtowerActions(req: Request): Promise<void> {
-	console.log("New commit pushed:", req.body.head_commit?.id);
+	console.log("Watchtower: New commit pushed: ", req.body.head_commit?.id);
 
 	try {
-		const actionScript = await execPromise("/home/bits/bits/services/action.sh");
-		if (actionScript.stdout) console.log(actionScript.stdout);
-		if (actionScript.stderr) console.error(actionScript.stderr);
-	} catch (error) {
-		console.error(error);
+		exec("/home/bits/bits/services/action.sh", (error, stdout, stderr) => {
+			if (error) console.error(stderr);
+			if (stdout) console.log(stdout);
+		});
+	} catch (execError) {
+		console.error(execError);
 	}
 }
