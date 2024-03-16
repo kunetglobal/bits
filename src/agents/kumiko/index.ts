@@ -42,7 +42,7 @@ const config: KumikoConfig = {
 config.init = () => {
 	const watchtower = spawn(
 		"ts-node",
-		["./watchtower.ts", config.port, config.githubWebhookSecret],
+		["~/bits/watchtower.ts", config.port, config.githubWebhookSecret],
 		{
 			stdio: "pipe",
 		},
