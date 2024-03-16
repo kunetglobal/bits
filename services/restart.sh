@@ -1,8 +1,6 @@
 #!/bin/bash
 
 cd ~/bits/
-git pull
-echo "Watchtower: Pulled latest changes"
 
 sudo cp -f ~/bits/services/system/* /etc/systemd/system/
 echo "Watchtower: Service files updated"
@@ -22,4 +20,3 @@ for service_file in "$script_dir/system/"*.service; do
     echo " - restarted $file"
 done
 echo "Watchtower: Restarted all services"
-
