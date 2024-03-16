@@ -1,5 +1,34 @@
 import type { Request, Response } from "express";
+import express from "express";
 import { exec } from "node:child_process";
+
+const app = express();
+
+const config = {
+	port: process.argv[2],
+	githubWebhookSecret:process.argv[3],
+};
+
+if (!config.port || !config.githubWebhookSecret) {
+	console.error("Missing watchtower config arguments");
+	process.exit(1);
+}
+
+app.use(express.json());
+app.post("/hook", (req: Request, res: Response) => {
+	// Only listen to push events
+	checkEventType(req, res);
+
+	// Make sure we're communicating with github
+	verifySignature(req, res, config.githubWebhookSecret);
+
+	// Pull new code and run the watchtower script
+	runWatchtowerActions(req);
+});
+
+app.listen(config.port, () => {
+	console.log(`Server is running on port ${config.port}`);
+});
 
 export function checkEventType(req: Request, res: Response): void {
 	const githubEvent: string = req.headers["x-github-event"] as string;

@@ -1,4 +1,4 @@
-import { exec } from "node:child_process";
+import { exec, spawn } from "node:child_process";
 import { Agent, type AgentConfig } from "../../framework/client";
 import dotenv from "dotenv";
 import express, { type Request, type Response } from "express";
@@ -8,7 +8,6 @@ import {
 	verifySignature,
 } from "./watchtower";
 
-const app = express();
 dotenv.config();
 const {
 	KUMIKO_TOKEN,
@@ -40,21 +39,17 @@ const config: KumikoConfig = {
 	intents: ["Guilds", "GuildMessages"],
 };
 
-app.use(express.json());
-app.post("/hook", (req: Request, res: Response) => {
-	// Only listen to push events
-	checkEventType(req, res);
-
-	// Make sure we're communicating with github
-	verifySignature(req, res, config.githubWebhookSecret);
-
-	// Pull new code and run the watchtower script
-	runWatchtowerActions(req);
-});
-
-app.listen(config.port, () => {
-	console.log(`Server is running on port ${config.port}`);
-});
+config.init = () => {
+	const watchtower = spawn("ts-node", ["./watchtower.ts", config.port, config.githubWebhookSecret], {
+		stdio: "pipe",
+	});
+	watchtower.stdout.on("data", (data) => {
+		console.log(data);
+	});
+	watchtower.stderr.on("data", (err) => {
+		console.error(err);
+	});
+};
 
 export const kumiko = new Agent(config);
 
