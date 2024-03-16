@@ -2,7 +2,11 @@ import { exec } from "node:child_process";
 import { Agent, type AgentConfig } from "../../framework/client";
 import dotenv from "dotenv";
 import express, { type Request, type Response } from "express";
-import { checkEventType, runWatchtowerActions, verifySignature } from "./watchtower";
+import {
+	checkEventType,
+	runWatchtowerActions,
+	verifySignature,
+} from "./watchtower";
 
 const app = express();
 dotenv.config();
@@ -36,23 +40,21 @@ const config: KumikoConfig = {
 	intents: ["Guilds", "GuildMessages"],
 };
 
-config.init = () => {
-	app.use(express.json());
-	app.post("/hook", (req: Request, res: Response) => {
-		// Only listen to push events
-		checkEventType(req, res);
+app.use(express.json());
+app.post("/hook", (req: Request, res: Response) => {
+	// Only listen to push events
+	checkEventType(req, res);
 
-		// Make sure we're communicating with github
-		verifySignature(req, res, config.githubWebhookSecret);
+	// Make sure we're communicating with github
+	verifySignature(req, res, config.githubWebhookSecret);
 
-		// Pull new code and run the watchtower script
-		runWatchtowerActions(req);
-	});
+	// Pull new code and run the watchtower script
+	runWatchtowerActions(req);
+});
 
-	app.listen(config.port, () => {
-		console.log(`Server is running on port ${config.port}`);
-	});
-};
+app.listen(config.port, () => {
+	console.log(`Server is running on port ${config.port}`);
+});
 
 export const kumiko = new Agent(config);
 
