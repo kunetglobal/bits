@@ -21,7 +21,19 @@ export class Agent extends Client {
 
 		this.login(config.token);
 		this.once("ready", () => {
-			console.log("kumiko is ready!");
+			console.log(`${config.name} is ready!`);
+		});
+
+		this.on("messageCreate", async (message) => {
+			console.log(message.content);
+			const messageContent = message.content.toLowerCase();
+
+			if (messageContent.includes("status")) {
+				await this.sendMessage(
+					message.channelId,
+					"**`( =ω=)b`: all systems operational**",
+				);
+			}
 		});
 	}
 

@@ -10,11 +10,6 @@ const {
 	GITHUB_WEBHOOK_SECRET,
 } = process.env;
 
-interface KumikoConfig extends AgentConfig {
-	port: string;
-	githubWebhookSecret: string;
-}
-
 if (!GITHUB_WEBHOOK_SECRET)
 	throw new Error("GITHUB_WEBHOOK_SECRET is not defined");
 if (!WATCHTOWER_PORT) throw new Error("WATCHTOWER_PORT is not defined");
@@ -24,19 +19,28 @@ if (!KUMIKO_TOKEN || !KUMIKO_CLIENT_ID) {
 	);
 }
 
+interface KumikoConfig extends AgentConfig {
+	port: string;
+	webhookSecret: string;
+}
+
 const config: KumikoConfig = {
 	name: "kumiko",
 	token: KUMIKO_TOKEN,
 	client_id: KUMIKO_CLIENT_ID,
 	port: WATCHTOWER_PORT,
-	githubWebhookSecret: GITHUB_WEBHOOK_SECRET,
-	intents: ["Guilds", "GuildMessages"],
+	webhookSecret: GITHUB_WEBHOOK_SECRET,
+	intents: ["Guilds", "GuildMessages", "MessageContent"],
 };
 
 config.init = () => {
 	const watchtower = spawn(
 		"ts-node",
-		["./src/agents/kumiko/watchtower.ts", config.port, config.githubWebhookSecret],
+		[
+			"./src/agents/kumiko/watchtower.ts",
+			config.port,
+			config.webhookSecret,
+		],
 		{
 			stdio: "pipe",
 		},
@@ -47,21 +51,16 @@ config.init = () => {
 	watchtower.stderr.on("data", (err: Buffer) => {
 		console.error(err.toString());
 	});
+	watchtower.on("spawn", () => {
+		console.log("Watchtower: spawned new process");
+	});
+	watchtower.on("exit", (code: number) => {
+		console.log(`Watchtower: stopped with code ${code}`);
+	});
 };
 
 export const kumiko = new Agent(config);
 
-kumiko.on("messageCreate", async (message) => {
-	console.log(message.content);
-	const messageContent = message.content.toLowerCase();
-
-	if (messageContent.includes("status")) {
-		await kumiko.sendMessage(
-			message.channelId,
-			"**`( =ω=)b`: all systems operational**",
-		);
-	}
-});
 
 function isSystemdServiceActive(serviceName: string): Promise<boolean> {
 	return new Promise((resolve, reject) => {
