@@ -8,7 +8,7 @@ echo "Watchtower: Service files updated"
 sudo systemctl daemon-reload
 echo "Watchtower: Service daemon reloaded"
 
-echo "Watchtower: Restarting services: "
+echo "Watchtower: Restarting all"
 script_dir=$(dirname "$0")
 for service_file in "$script_dir/system/"*.service; do
     file=$(basename "$service_file" .service)

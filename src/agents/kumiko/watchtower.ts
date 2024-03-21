@@ -82,6 +82,11 @@ export async function runWatchtowerActions(req: Request): Promise<void> {
 			if (error) console.error(stderr);
 			if (stdout) console.log(stdout);
 		});
+
+		exec("./services/restart.sh", (error, stdout, stderr) => {
+			if (error) console.error(stderr);
+			if (stdout) console.log(stdout);
+		});
 	} catch (execError) {
 		console.error(execError);
 	}
