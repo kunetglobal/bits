@@ -18,6 +18,5 @@ for service_file in "$script_dir/system/"*.service; do
     sudo systemctl start "$file.service"
     echo " - restarted $file"
 
-    echo " - restarted $file"
 done
 echo "Watchtower: Restarted all services"
