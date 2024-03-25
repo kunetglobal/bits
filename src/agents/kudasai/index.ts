@@ -1,4 +1,4 @@
-import { Agent } from "../../framework/client";
+import { Agent } from "../../framework/agent";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -14,13 +14,12 @@ export const agent = new Agent({
 	name: "kudasai",
 	token: KUDASAI_TOKEN,
 	client_id: KUDASAI_CLIENT_ID,
-	intents: ["Guilds", "GuildMessages"],
+	intents: ["Guilds", "GuildMessages", "MessageContent"],
 });
 
 agent.on("messageCreate", async (message) => {
 	console.log(message.content);
 	const messageContent = message.content.toLowerCase();
-
 
 	if (messageContent.includes("status")) {
 		await agent.sendMessage(

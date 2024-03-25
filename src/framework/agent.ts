@@ -31,7 +31,7 @@ export class Agent extends Client {
 			if (messageContent.includes("status")) {
 				await this.sendMessage(
 					message.channelId,
-					"**`( =ω=)b`: all systems operational**",
+					"**all systems operational**",
 				);
 			}
 		});
@@ -42,7 +42,7 @@ export class Agent extends Client {
 		if (channel?.isTextBased()) {
 			(channel as TextChannel).send(message);
 		} else {
-			console.error(`Channel ${channelId} is not a text channel.`);
+			console.error(`channel ${channelId} is not a text channel.`);
 		}
 	}
 }

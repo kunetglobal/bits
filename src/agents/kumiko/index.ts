@@ -1,5 +1,5 @@
 import { exec, spawn } from "node:child_process";
-import { Agent, type AgentConfig } from "../../framework/client";
+import { Agent, type AgentConfig } from "../../framework/agent";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -36,11 +36,7 @@ const config: KumikoConfig = {
 config.init = () => {
 	const watchtower = spawn(
 		"ts-node",
-		[
-			"./src/agents/kumiko/watchtower.ts",
-			config.port,
-			config.webhookSecret,
-		],
+		["./src/agents/kumiko/watchtower.ts", config.port, config.webhookSecret],
 		{
 			stdio: "pipe",
 		},
@@ -60,7 +56,6 @@ config.init = () => {
 };
 
 export const kumiko = new Agent(config);
-
 
 function isSystemdServiceActive(serviceName: string): Promise<boolean> {
 	return new Promise((resolve, reject) => {
