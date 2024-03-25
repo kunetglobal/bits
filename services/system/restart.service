@@ -1,0 +1,16 @@
+
+[Unit]
+Description=Restart Services
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/path/to/restart-script.sh
+Restart=always
+RestartSec=5
+WorkingDirectory=/home/bits/bits/
+Environment=PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+ExecStart=/bin/bash /home/bits/bits/services/restart.sh 
+
+[Install]
+WantedBy=multi-user.target

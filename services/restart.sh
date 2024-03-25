@@ -16,6 +16,7 @@ for service_file in "$script_dir/system/"*.service; do
     sudo systemctl restart "$file.service"
     sudo systemctl enable "$file.service"
     sudo systemctl start "$file.service"
+    echo " - restarted $file"
 
     echo " - restarted $file"
 done
