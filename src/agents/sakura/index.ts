@@ -13,18 +13,10 @@ if (!SAKURA_TOKEN || !SAKURA_CLIENT_ID) {
 export const agent = new Agent({
 	name: "sakura",
 	token: SAKURA_TOKEN,
-	client_id: SAKURA_CLIENT_ID,
+	clientId: SAKURA_CLIENT_ID,
 	intents: ["Guilds", "GuildMessages", "MessageContent"],
-});
-
-agent.on("messageCreate", async (message) => {
-	console.log(message.content);
-	const messageContent = message.content.toLowerCase();
-
-	if (messageContent.includes("status")) {
-		await agent.sendMessage(
-			message.channelId,
-			"**`( =ω=)b`: all systems operational**",
-		);
-	}
+	messageScope: {
+		readMentionsOnly: true,
+		readBotsMessages: false,
+	},
 });

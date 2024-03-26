@@ -13,18 +13,10 @@ if (!KUDASAI_TOKEN || !KUDASAI_CLIENT_ID) {
 export const agent = new Agent({
 	name: "kudasai",
 	token: KUDASAI_TOKEN,
-	client_id: KUDASAI_CLIENT_ID,
+	clientId: KUDASAI_CLIENT_ID,
 	intents: ["Guilds", "GuildMessages", "MessageContent"],
-});
-
-agent.on("messageCreate", async (message) => {
-	console.log(message.content);
-	const messageContent = message.content.toLowerCase();
-
-	if (messageContent.includes("status")) {
-		await agent.sendMessage(
-			message.channelId,
-			"**`( =ω=)b`: all systems operational**",
-		);
-	}
+	messageScope: {
+		readMentionsOnly: true,
+		readBotsMessages: false,
+	},
 });

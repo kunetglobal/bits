@@ -27,10 +27,14 @@ interface KumikoConfig extends AgentConfig {
 const config: KumikoConfig = {
 	name: "kumiko",
 	token: KUMIKO_TOKEN,
-	client_id: KUMIKO_CLIENT_ID,
+	clientId: KUMIKO_CLIENT_ID,
 	port: WATCHTOWER_PORT,
 	webhookSecret: GITHUB_WEBHOOK_SECRET,
 	intents: ["Guilds", "GuildMessages", "MessageContent"],
+	messageScope: {
+		readMentionsOnly: true,
+		readBotsMessages: false,
+	},
 };
 
 config.init = () => {
